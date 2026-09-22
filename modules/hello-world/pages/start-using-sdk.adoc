@@ -1,0 +1,159 @@
+= {name-sdk} Quickstart Guide
+:page-toclevels: 2
+:description: Install, connect, try. A quick start guide to get you up and running with Operational Insights and the {name-sdk}.
+
+[abstract]
+{description}
+
+
+
+
+include::operational-insights-sdk:shared:partial$start-using-sdk.adoc[tag=intro]
+
+
+== Before You Start
+
+Install and configure an xref:operational-insights:intro:intro.adoc[Operational Insights Cluster].
+
+////
+Sign up for a xref:cloud:get-started:create-account.adoc[Capella account],
+and choose a xref:columnar:intro:intro.adoc[Columnar] cluster.
+
+You'll need to add your IP address to the allowlist, during the sign-up and cluster creation process (this can also be done at any time, via the UI, should the address change, or if you need to add a new one).
+////
+
+
+=== Prerequisites
+
+Currently Python 3.11 - Python 3.15 is supported.
+See the xref:project-docs:compatibility.adoc#platform-compatibility[compatibility page] for more information about platform support.
+
+
+== Getting the SDK
+
+The SDK can be installed via `pip`:
+
+[source,console]
+----
+$ python3 -m pip install couchbase-analytics
+----
+
+For other installation methods, see the xref:project-docs:sdk-full-installation.adoc[installation page].
+
+
+
+[quickstart]
+== Connecting and Executing a Query
+
+The 2.2 Operational Insights Enterprise Cluster introduced support for JWT and client certificate authentication, as well as a new poll-based {async-server-api-feature-name} that uses request handles to fetch results.
+This API eliminates the need for long-running server connections.
+
+The examples in this first section of the page are for the standard API, working with all releases of Operational Insights (with {async-server-api-feature-name} examples following in the <<#server-asynchronous-api,Server Async section>>).
+Note, you can still use this API with 2.2+ releases of Operational Insights, in addition to the new API.
+
+
+=== Server Synchronous Request API
+
+.Blocking API Example
+[source,python]
+----
+include::devguide:example$python/overview.py[tags=*]
+----
+
+=== Python Asynchronous API with asyncio
+
+.asyncio Example
+[source,python]
+----
+include::devguide:example$python/async_overview.py[tags=*]
+----
+
+
+[[#server-asynchronous-api]]
+=== {async-server-api-feature-name} (with Python Blocking API)
+
+Operational Insights 2.2 introduces a {async-server-api-feature-name}.
+The SDK sends a request, polls for results, and then fetches once the result is available.
+
+.Server Asynchronous API Example
+[source,python]
+----
+import logging
+import time
+
+from couchbase_analytics import LOG_DATE_FORMAT, LOG_FORMAT
+from couchbase_analytics.cluster import Cluster
+from couchbase_analytics.credential import Credential
+from couchbase_analytics.query_handle import BlockingQueryHandle, BlockingQueryResultHandle
+
+# setup logger via basicConfig
+logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT, level=logging.DEBUG)
+
+def wait_for_query_results(handle: BlockingQueryHandle,
+                           delay: float = 2.5,
+                           timeout: int = 120) -> BlockingQueryResultHandle:
+    current_time = time.monotonic()
+    deadline = current_time + timeout  # seconds
+    status = None
+    while True:
+        try:
+            status = handle.fetch_status()
+            if status.results_ready():
+                return status.result_handle()
+        except Exception as e:
+            # Depending on the use case, you might want to break here or continue retrying.
+            print(f'Error fetching query results: {e}')
+
+        current_time = time.monotonic()
+        delay_time = current_time + delay
+        if deadline < delay_time:
+            raise TimeoutError(f'Query results not ready within {timeout} seconds.')
+        else:
+            if status is not None:
+                print(f'Query status: {status}')
+            print(f'Query results not ready yet, sleeping for {delay} seconds...')
+
+        time.sleep(delay)
+
+
+
+def main() -> None:
+    # Update this to your cluster
+    # IMPORTANT:  The appropriate port needs to be specified. The SDK's default ports are 80 (http) and 443 (https).
+    #             If attempting to connect to Capella, the correct ports are most likely to be 8095 (http) and 18095 (https).    # noqa: E501
+    #             Capella example: https://cb.2xg3vwszqgqcrsix.cloud.couchbase.com:18095
+    endpoint = 'http://localhost'
+    username = 'Administrator'
+    pw = 'password'
+    # User Input ends here.
+
+    cred = Credential.from_username_and_password(username, pw)
+    cluster = Cluster.create_instance(endpoint, cred)
+    statement = 'SELECT VALUE SLEEP("x", 100) FROM RANGE(1, 100) AS id;'
+    handle = cluster.start_query(statement)
+
+    result_handle = wait_for_query_results(handle, delay=2.5, timeout=60)
+    res = result_handle.fetch_results()
+
+    for row in res:
+        print(f'Found row: {row}')
+    print(f'metadata={res.metadata()}')
+    result_handle.discard_results()
+
+
+if __name__ == '__main__':
+    main()
+----
+
+
+=== Connection String
+
+The `connStr` in the above example should takes the form of "https://<your_hostname>:" + PORT.
+include::{version-common}@operational-insights-sdk:shared:partial$connstr.adoc[tag=connstr]
+
+
+
+
+== Migration from Row-Based Analytics
+
+include::{version-common}@operational-insights-sdk:shared:partial$migration.adoc[tag=migration]

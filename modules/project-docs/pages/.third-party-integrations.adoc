@@ -1,0 +1,46 @@
+= 3^rd^ Party Integrations
+:description: The Columnar Python SDK is often used with unofficial and third party tools and applications to integrate into broader language and platform ecosystems, and across data lakes in heterogeneous environments.
+
+
+
+
+[abstract]
+{description}
+
+
+include::{version-common}@columnar-sdk:shared:partial$integrations.adoc[tag=intro]
+
+
+include::{version-common}@columnar-sdk:shared:partial$integrations.adoc[tag=official]
+
+// Couchbase supports integrating with xref:3.5@spark-connector:ROOT:java-api.adoc[Spark].
+
+
+include::{version-common}@columnar-sdk:shared:partial$integrations.adoc[tag=important]
+
+
+=== Pandas DataFrame Support
+
+DataFrames can be made from the JSON returned by the Columnar SDK, with something like this:
+
+[source,python]
+----
+# Execute the Columnar query
+res = cluster.execute_query(statement)
+
+# Read the results into JSON
+all_rows = res.get_all_rows()
+
+# Create a Pandas DataFrame (it will infer schema)
+df = pandas.read_json(all_rows)
+----
+
+Specific examples can be seen on the xref:howtos:sqlpp-queries-with-sdk.adoc[Columnar SDK Query page].
+
+
+// Conversion for Arrow and other similar libraries is almost certainly equally possible.
+
+
+include::{version-common}@columnar-sdk:shared:partial$integrations.adoc[tag=other]
+
+

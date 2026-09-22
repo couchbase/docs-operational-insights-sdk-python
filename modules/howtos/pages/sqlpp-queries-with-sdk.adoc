@@ -1,0 +1,275 @@
+= Querying with {sqlpp}
+:page-toclevels: 3
+:description: You can query for documents in Couchbase using the {sqlpp} query language, a language based on SQL, but designed for structured and flexible JSON documents.
+
+
+[abstract]
+{description}
+
+
+
+On this page we dive straight into using the Query Service API from the {name-sdk}.
+For a deeper look at the concepts, to help you better understand the Query Service, and the {sqlpp} language, see the links in the <<further-information,Further Information>> section at the end of this page.
+
+
+
+
+Here we show queries against the Travel Sample collection, at cluster and scope level,
+and give links to information on adding other collections to your data.
+// kafka
+// postgres
+// capella
+
+
+== Before You Start
+
+This page assumes that you have xref:hello-world:start-using-sdk.adoc[installed the {name-sdk}], and created an xref:enterprise-analytics:install:introduction-linux-installation.adoc[Operational Insights cluster].
+// added your IP address to the allowlist, and xref:columnar:admin:prepare-project.adoc#cluster[created a Columnar cluster].
+
+Create a collection to work upon by xref:enterprise-analytics:intro:connecting-to-data-sources.adoc#import-the-travel-sample-collections[importing the travel-sample dataset] into your cluster.
+
+
+
+== Querying Your Dataset
+
+
+[TIP]
+.API Enhancements & Async
+====
+The 2.2 Operational Insights Enterprise Cluster introduced support for JWT and client certificate authentication, as well as a new poll-based {async-server-api-feature-name} that uses request handles to fetch results.
+This API eliminates the need for long-running server connections.
+
+The examples in this first section of the page are for the standard API, working with all releases of Operational Insights (with {async-server-api-feature-name} examples following in the <<#server-asynchronous-api,Server Async section>>).
+Note, you can still use this API with 2.2+ releases of Operational Insights, in addition to the new API.
+====
+
+Most queries return more than one result, and you want to iterate over the results:
+
+=== Scope Level Queries
+
+[{tabs}]
+====
+Sync API::
++
+--
+[source,python]
+----
+include::devguide:example$python/query.py[tag=scope-query,indent=0]
+----
+--
+
+Async API::
++
+--
+[source,python]
+----
+include::devguide:example$python/async_query.py[tag=scope-query,indent=0]
+----
+--
+====
+
+=== Cluster Level Queries
+
+[{tabs}]
+====
+Sync API::
++
+--
+[source,python]
+----
+include::devguide:example$python/query.py[tag=cluster-query,indent=0]
+----
+--
+
+Async API::
++
+--
+[source,python]
+----
+include::devguide:example$python/async_query.py[tag=cluster-query,indent=0]
+----
+--
+====
+
+
+=== Positional and Named Parameters
+
+Supplying parameters as individual arguments to the query allows the query engine to optimize the parsing and planning of the query. 
+You can either supply these parameters by name or by position.
+
+==== Positional Parameters
+
+Execute a query with positional arguments:
+
+[{tabs}]
+====
+Sync API::
++
+--
+[source,python]
+----
+include::devguide:example$python/query.py[tag=query-positional-params,indent=0]
+----
+--
+
+Async API::
++
+--
+[source,python]
+----
+include::devguide:example$python/async_query.py[tag=query-positional-params,indent=0]
+----
+--
+====
+
+==== Named Parameters
+
+Execute a query with named arguments:
+
+[{tabs}]
+====
+Sync API::
++
+--
+[source,python]
+----
+include::devguide:example$python/query.py[tag=query-named-params,indent=0]
+----
+--
+
+Async API::
++
+--
+[source,python]
+----
+include::devguide:example$python/async_query.py[tag=query-named-params,indent=0]
+----
+--
+====
+
+
+
+== Query Options
+
+The query service provides an array of options to customize your query.
+The following table lists them all:
+
+.Available Query Options
+[options="header"]
+|====
+| Name       | Description
+| `client_context_id: Optional[str]` | An optional identifier for the query.
+| `deserializer: Optional[Deserializer]` | Sets the deserializer applied to results. If not specified, defaults to the cluster's default deserializer, `DefaultJsonDeserializer`.
+| `named_parameters: Optional[Dict[str, JSONType]]` | Values to use for named placeholders in query.
+| `positional_parameters: Optional[Iterable[JSONType]]` | Values to use for positional placeholders in query.
+| `query_context: Optional[str]` | Specifies the context within which this query should be executed.
+| `raw: Optional[Dict[str, Any]]` | Specifies any additional parameters which should be passed to the Analytics engine when executing the query.
+| `readonly: Optional[bool]` | Specifies that this query should be executed in read-only mode, disabling the ability for the query to make any changes to the data.
+| `scan_consistency: Optional[Union[QueryScanConsistency, str]]` | Specifies the consistency requirements when executing the query.
+| `timeout: Optional[timedelta]` | Set to configure allowed time for operation to complete. Defaults to `None` (75s).
+|====
+
+
+== Using the Query Result
+
+Results from the Couchbase Operational Insights SDK can easily be used with several common Data Analytics Python libraries, 
+including https://pandas.pydata.org/[Pandas] and https://arrow.apache.org/docs/python/index.html[PyArrow].
+
+[source,python]
+.Importing the result to a `pandas` `DataFrame`.
+----
+include::devguide:example$python/third_party.py[tag=pandas,indent=0]
+----
+
+[source,python]
+.Importing the query result to a `PyArrow` table.
+----
+include::devguide:example$python/third_party.py[tag=pyarrow,indent=0]
+----
+
+
+[[#server-asynchronous-api]]
+== {async-server-api-feature-name} (with Python Blocking API)
+
+Operational Insights Server 2.2 added a{async-server-api-feature-name}.
+The SDK will send a request, poll for results, and then fetch once the result is available.
+The SDK supports each stage of this information flow:
+
+`cluster.start_query()` → `QueryHandle` → `QueryStatus` → `QueryResultsHandle`
+
+.Server Asynchronous API Example
+[source,python]
+----
+import logging
+import time
+
+from couchbase_analytics import LOG_DATE_FORMAT, LOG_FORMAT
+from couchbase_analytics.cluster import Cluster
+from couchbase_analytics.credential import Credential
+from couchbase_analytics.query_handle import BlockingQueryHandle, BlockingQueryResultHandle
+
+# setup logger via basicConfig
+logging.basicConfig(format=LOG_FORMAT, datefmt=LOG_DATE_FORMAT, level=logging.DEBUG)
+
+def wait_for_query_results(handle: BlockingQueryHandle,
+                           delay: float = 2.5,
+                           timeout: int = 120) -> BlockingQueryResultHandle:
+    current_time = time.monotonic()
+    deadline = current_time + timeout  # seconds
+    status = None
+    while True:
+        try:
+            status = handle.fetch_status()
+            if status.results_ready():
+                return status.result_handle()
+        except Exception as e:
+            # Depending on the use case, you might want to break here or continue retrying.
+            print(f'Error fetching query results: {e}')
+
+        current_time = time.monotonic()
+        delay_time = current_time + delay
+        if deadline < delay_time:
+            raise TimeoutError(f'Query results not ready within {timeout} seconds.')
+        else:
+            if status is not None:
+                print(f'Query status: {status}')
+            print(f'Query results not ready yet, sleeping for {delay} seconds...')
+
+        time.sleep(delay)
+
+
+
+def main() -> None:
+    # Update this to your cluster
+    # IMPORTANT:  The appropriate port needs to be specified. The SDK's default ports are 80 (http) and 443 (https).
+    #             If attempting to connect to Capella, the correct ports are most likely to be 8095 (http) and 18095 (https).    # noqa: E501
+    #             Capella example: https://cb.2xg3vwszqgqcrsix.cloud.couchbase.com:18095
+    endpoint = 'http://localhost'
+    username = 'Administrator'
+    pw = 'password'
+    # User Input ends here.
+
+    cred = Credential.from_username_and_password(username, pw)
+    cluster = Cluster.create_instance(endpoint, cred)
+    statement = 'SELECT VALUE SLEEP("x", 100) FROM RANGE(1, 100) AS id;'
+    handle = cluster.start_query(statement)
+
+    result_handle = wait_for_query_results(handle, delay=2.5, timeout=60)
+    res = result_handle.fetch_results()
+
+    for row in res:
+        print(f'Found row: {row}')
+    print(f'metadata={res.metadata()}')
+    result_handle.discard_results()
+
+
+if __name__ == '__main__':
+    main()
+----
+
+
+
+== Further Information
+
+The xref:server:analytics:1_intro.adoc[{sqlpp} for Analytics Reference]
+offers a complete guide to the {sqlpp} language for both of our analytics services, including all of the latest additions.

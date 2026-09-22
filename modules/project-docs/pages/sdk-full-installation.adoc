@@ -1,0 +1,45 @@
+= Full Installation
+:description: Installation instructions for the {name-sdk}.
+:page-partial:
+
+
+[abstract]
+{description}
+
+
+
+
+
+== Before You Start
+
+
+Set up an xref:enterprise-analytics:intro:intro.adoc[Enterprise Analytics] cluster.
+
+=== Prerequisites
+
+Currently Python 3.11 - Python 3.15 is supported.
+See the xref:project-docs:compatibility.adoc#platform-compatibility[compatibility page] for more information about platform support.
+
+
+== Getting the SDK
+
+
+The SDK can be installed via `pip`:
+
+[source,console]
+----
+python -m pip install couchbase-operational-insights
+----
+
+
+
+== Other Installation Methods
+
+=== Install from Source
+
+The SDK can be installed from source with the following command:
+
+[source,console]
+----
+python -m pip install git+https://github.com/couchbase/operational-insights-python-client.git
+----

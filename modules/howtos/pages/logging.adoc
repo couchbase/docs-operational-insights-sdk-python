@@ -1,0 +1,67 @@
+= Logging
+:description: Logging with the Operational Insights Python SDK.
+
+
+[abstract]
+{description}
+
+The Operational Insights Python SDK allows logging via the standard `logging` module, or directly to the console.
+
+
+== Enabling Logging
+
+// 
+.Python Logging Module
+[source,python]
+----
+include::devguide:example$python/logging_example.py[tag=logging]
+----
+
+== Logging via Environmental Settings
+
+IMPORTANT: Only one logger can be created.  Either use `PYCBAC_LOG_LEVEL` to create a console logger or python `logging`, as mentioned above.
+
+In the command line environment, the PYCBAC_LOG_LEVEL variable is set as follows:
+
+.GNU/Linux and Mac
+[source,console]
+----
+export PYCBAC_LOG_LEVEL=<log-level>
+----
+
+.Windows
+[source,console]
+----
+set PYCBAC_LOG_LEVEL=<log-level>
+----
+
+Where `<log-level>` is either `error`, `warn`, `info`, or `debug`.
+
+
+== Log Levels
+
+You can increase the log level for greater verbosity (more information) in the logs:
+
+* off -- disables all logging, which is normally set by default.
+* critical -- important functionality not working.
+* error -- error messages.
+* warn -- error notifications.
+* info -- useful notices, not often.
+* debug -- diagnostic information (level required to investigate problems).
+
+////
+== Log Redaction
+
+Redacting logs is a two-stage process.
+If you want to redact client logs (for example before handing them off to the Couchbase Support team) you first need to enable log redaction in your application.
+This is done through the https://docs.couchbase.com/sdk-api/couchbase-python-client/couchbase_api/options.html#clusteroptions[`ClusterOptions`], setting `log_redaction` to `True`.
+
+Once the SDK writes the logs with the tags to a file, you can then use the
+xref:{version-server}@server:cli:cbcli/cblogredaction.adoc[`cblogredaction` tool] to obfuscate the log.
+
+* You may wish to read more on Log Redaction
+xref:{version-server}@server:manage:manage-logging/manage-logging.adoc#understanding_redaction[in the Server docs].
+////
+
+
+// TODO: link to cpp logging docs?

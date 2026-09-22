@@ -1,0 +1,88 @@
+= Compatibility
+:description: Platform compatibility, and features available in different SDK versions, and compatibility between Operational Insights and Insights SDK.
+:page-toclevels: 3
+:table-caption!:
+
+
+[abstract]
+{description}
+// Plus notes on Cloud, networks, and AWS Lambda.
+
+
+
+
+
+== Platform Compatibility
+
+
+=== Python Version Compatibility
+
+Currently Python 3.11 - Python 3.15 is supported.
+
+// TIP: Remember to keep your Python installation up to date, via `pip`.
+
+
+
+=== OS Compatibility
+
+include::{sdk_api}@operational-insights-sdk:shared:partial$compatibility.adoc[tag=os-compat]
+
+
+
+
+
+=== Network Requirements
+
+include::{sdk_api}@operational-insights-sdk:shared:partial$network-requirements.adoc[tag=lan-like]
+
+
+
+
+
+
+== Operational Insights Compatibility
+
+The 1.0 releases of the Insights SDK is fully compatible with all currently supported releases of Operational Insights.
+The 1.0 {name_platform} SDK also supports the poll-based {async-server-api-feature-name} introduced in Operational Insights Enterprise 2.2.
+
+
+////
+is a fully hosted service, continually updated, and offering the latest version --
+with users having a few weeks to upgrade from the previous version.
+As such, the latest Couchbase Columnar SDKs are tested against the latest versions.
+Where older versions of the {name-sdk} pre-date significant new features in Columnar, those differences will be noted in this section.
+////
+
+
+
+
+=== API Version
+
+include::{sdk_api}@operational-insights-sdk:shared:partial$compatibility.adoc[tag=api-version]
+
+
+
+
+== SDK API Stability
+
+
+=== Interface Stability
+
+include::{version-common}@operational-insights-sdk:shared:partial$interface-stability-pars.adoc[tag=interface-stability-section]
+
+
+
+
+
+////
+=== Older Analytics SDK Versions
+
+include::{version-common}@analytics-sdk:shared:partial$archive.adoc[tag=link]
+////
+
+////
+Note the https://www.couchbase.com/support-policy[End of Life dates^] for {name-sdk} versions.
+See the notes there for Support details.
+////
+
+// Something on Columnar SDKs??
