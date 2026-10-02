@@ -53,4 +53,4 @@ Dive right in with our xref:howtos:sqlpp-queries-with-sdk.adoc[practical example
 
 // Parameterized queries
 
-// include::{version-common}@analytics-sdk:pages:partial$sqlpp.adoc[tag=options]
+// include::{version-common}@operational-insights-sdk:pages:partial$sqlpp.adoc[tag=options]
