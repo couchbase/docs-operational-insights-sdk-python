@@ -69,7 +69,7 @@ include::devguide:example$python/async_overview.py[tags=*]
 ----
 
 
-[[#server-asynchronous-api]]
+[[server-asynchronous-api]]
 === {async-server-api-feature-name} (with Python Blocking API)
 
 Operational Insights 2.2 introduces a {async-server-api-feature-name}.
