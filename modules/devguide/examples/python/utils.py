@@ -1,8 +1,8 @@
-from couchbase_analytics.cluster import Cluster
-from couchbase_analytics.options import ClusterOptions, SecurityOptions
-from couchbase_analytics.credential import Credential
+from couchbase_operational_insights.cluster import Cluster
+from couchbase_operational_insights.options import ClusterOptions, SecurityOptions
+from couchbase_operational_insights.credential import Credential
 
-from acouchbase_analytics.cluster import AsyncCluster
+from acouchbase_operational_insights.cluster import AsyncCluster
 
 
 ENDPOINT = 'https://192.168.107.129:18095'

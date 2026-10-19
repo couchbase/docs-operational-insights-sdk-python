@@ -1,6 +1,6 @@
 = Querying Your Data 
 :page-toclevels: 2
-:description: Querying Enterprise Analytics from the {name_platform} SDK, with {sqlpp}.
+:description: Querying Operational Insights from the {name_platform} SDK, with {sqlpp}.
 
 
 // Note to editors
@@ -23,7 +23,7 @@ See xref:{version-ea}@enterprise-analytics:sqlpp:1_intro.adoc[].
 == Real-Time Data Analysis
 
 Traditionally, analyzing JSON data in NoSQL databases requires complex transformations (like flattening) to prepare it for analytics, causing delays and hindering real-time insights.
-Enterprise Analytics eliminates these ETL complexities by unifying operational and analytical data stores into a single platform.
+Operational Insights eliminates these ETL complexities by unifying operational and analytical data stores into a single platform.
 This enables Zero ETL, reducing costs, complexity, and improving time to insight.
 
 
@@ -38,7 +38,7 @@ This {async-server-api-feature-name} was introduced in Operational Insights Serv
 For more information, see xref:{version-ea}@enterprise-analytics:reference:rest-analytics.adoc[].
 
 After the query request is submitted, clients can monitor the status of the request and on successful execution of query, opt to stream the results of the query.
-This way the connection between SDK client and Analytics Server does not stay open for the long duration of query processing, and isonly needed for result set streaming.
+This way the connection between SDK client and Operational Insights Cluster does not stay open for the long duration of query processing, and isonly needed for result set streaming.
 
 `cluster.start_query()` → `QueryHandle` → `QueryStatus` → `QueryResultsHandle`
 

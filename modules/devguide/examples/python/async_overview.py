@@ -1,9 +1,9 @@
 # tag::overview[]
 import asyncio
 
-from acouchbase_analytics.cluster import AsyncCluster
-from acouchbase_analytics.credential import Credential
-from acouchbase_analytics.options import QueryOptions
+from acouchbase_operational_insights.cluster import AsyncCluster
+from acouchbase_operational_insights.credential import Credential
+from acouchbase_operational_insights.options import QueryOptions
 
 
 async def main() -> None:

@@ -41,7 +41,7 @@ print(f'Got {len(list(res.rows()))} rows')
 print('======= POSITIONAL PARAMETERS ========')
 
 # tag::query-positional-params[]
-from couchbase_analytics.options import QueryOptions
+from couchbase_operational_insights.options import QueryOptions
 
 query = """
         SELECT airline, COUNT(*) AS route_count, AVG(route.distance) AS avg_route_distance

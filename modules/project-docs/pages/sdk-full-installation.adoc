@@ -13,12 +13,19 @@
 == Before You Start
 
 
-Set up an xref:enterprise-analytics:intro:intro.adoc[Enterprise Analytics] cluster.
+Set up an xref:enterprise-analytics:intro:intro.adoc[Operational Insights] cluster.
 
 === Prerequisites
 
 Currently Python 3.11 - Python 3.15 is supported.
 See the xref:project-docs:compatibility.adoc#platform-compatibility[compatibility page] for more information about platform support.
+
+We also recommend the following command to install or update `pip`, `setuptools`, and `wheel`:
+
+[source,console]
+----
+$ python3 -m pip install --upgrade pip setuptools wheel
+----
 
 
 == Getting the SDK
@@ -28,7 +35,7 @@ The SDK can be installed via `pip`:
 
 [source,console]
 ----
-python -m pip install couchbase-operational-insights
+$ python3 -m pip install couchbase-operational-insights
 ----
 
 
@@ -41,5 +48,5 @@ The SDK can be installed from source with the following command:
 
 [source,console]
 ----
-python -m pip install git+https://github.com/couchbase/operational-insights-python-client.git
+$ python3 -m pip install git+https://github.com/couchbase/operational-insights-python-client.git
 ----

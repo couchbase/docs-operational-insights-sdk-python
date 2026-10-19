@@ -16,9 +16,9 @@
 # tag::logging[]
 import logging
 
-from couchbase_analytics import LOG_DATE_FORMAT, LOG_FORMAT
-from couchbase_analytics.cluster import Cluster
-from couchbase_analytics.credential import Credential
+from couchbase_operational_insights import LOG_DATE_FORMAT, LOG_FORMAT
+from couchbase_operational_insights.cluster import Cluster
+from couchbase_operational_insights.credential import Credential
 
 
 # output log messages to example.log
