@@ -28,10 +28,9 @@ any changes to expected behavior are noted in the release notes that follow.
 
 
 [[v1.0.0]]
-=== Version 1.0.0 (?? October 2026)
+=== Version 1.0.0 15 October 2026)
 
 This is the first General Availability (GA) release of the new Insights Python SDK.
-It supports executing queries against Operational Insights clusters, with additional features planned for future releases.
 
 https://docs.couchbase.com/sdk-api/operational-insights-python-client-1.0.0/[API Reference]
 // end::all[]
