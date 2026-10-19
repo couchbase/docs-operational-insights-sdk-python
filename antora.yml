@@ -23,5 +23,5 @@ asciidoc:
     name-sdk: 'Python Operational Insights SDK'
     sdk_api: '1.0'
     sdk-api-link: https://docs.couchbase.com/sdk-api/operational-insights-python-client
-    sdk-gh-link: https://github.com/couchbaselabs/operational-insights-python-client
+    sdk-gh-link: https://github.com/couchbase/operational-insights-python-client
     async-server-api-feature-name: 'Server Asynchronous Request API'
