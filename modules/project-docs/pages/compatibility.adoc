@@ -45,6 +45,8 @@ include::{sdk_api}@operational-insights-sdk:shared:partial$network-requirements.
 The 1.0 releases of the Insights SDK is fully compatible with all currently supported releases of Operational Insights.
 The 1.0 {name_platform} SDK also supports the poll-based {async-server-api-feature-name} introduced in Operational Insights Enterprise 2.2.
 
+include::{sdk_api}@operational-insights-sdk:shared:partial$compatibility.adoc[tag=cluster-compat]
+
 
 ////
 is a fully hosted service, continually updated, and offering the latest version --
